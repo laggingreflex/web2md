@@ -6,13 +6,16 @@ import { processMarkdownWithImages } from './_imgProcessor';
 import fs from 'fs';
 import { runGPT } from './_gpt';
 import Showdown from 'showdown';
-import puppeteer from 'puppeteer';
+import puppeteer from 'puppeteer-extra';
+import StealthPlugin from 'puppeteer-extra-plugin-stealth';
 import { wrapInStyledHtml } from './_htmlwrap';
 const gptModel = 'gpt-3.5-turbo-0125';
 const gptModelBig = 'gpt-4-turbo-2024-04-09'
 const browserFetchUrl = process.env.HTMLFETCH_API?`${process.env.HTMLFETCH_API}/?url=`:undefined;
 const browserWSEndpoint = process.env.BROWSERLESS_KEY? `https://chrome.browserless.io?token=${process.env.BROWSERLESS_KEY}`:undefined;
 
+
+puppeteer.use(StealthPlugin())
 // Define the function using ES6 arrow function syntax
 let browser;
 const fetchCleanMarkdownFromUrl = async (url, filePath, fetchImages = false, imgDirName = "images", imagesBasePathOverride = undefined, removeNonContent = true, applyGpt="", bigModel = false) => {
